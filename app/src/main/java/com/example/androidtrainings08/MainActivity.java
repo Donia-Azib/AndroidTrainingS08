@@ -1,5 +1,6 @@
 package com.example.androidtrainings08;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 {
                     sharedpreferences.edit().putBoolean("logged",true).putString("email_user",email_str).apply();
                     startActivity(new Intent(MainActivity.this,ActivityMenu.class));
+                    finish();
                 }
             }
         });
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 //        == false => loginAct
         if(sharedpreferences.contains("logged"))
         {
-            if(sharedpreferences.getBoolean("logged"))
+            if(sharedpreferences.getBoolean("logged",false))
 //                ==true
                 startActivity(new Intent(MainActivity.this,ActivityMenu.class));
         }

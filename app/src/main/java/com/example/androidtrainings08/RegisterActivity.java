@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText email,pass,username,cnfpass;
-    private Button btn_register,btn_back;
+    private Button btn_register;
+    private ImageButton btn_back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +49,10 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "Complete the form ... !", Toast.LENGTH_SHORT).show();
                 else
                 {
-                    if(pass_str.equals(cnf_pass_str))
-                        startActivity(new Intent(RegisterActivity.this,MainActivity.class));
+                    if(pass_str.equals(cnf_pass_str)) {
+                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                        finish();
+                    }
                     else
                         Toast.makeText(RegisterActivity.this, "Password not match .....", Toast.LENGTH_SHORT).show();
 

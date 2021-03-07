@@ -3,6 +3,7 @@ package com.example.androidtrainings08;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ public class ActivityMenu extends AppCompatActivity {
         {
             sharedPreferences.edit().putBoolean("logged",false).remove("email_user").apply();
             startActivity(new Intent(ActivityMenu.this,MainActivity.class));
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }
