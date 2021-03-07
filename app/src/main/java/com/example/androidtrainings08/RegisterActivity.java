@@ -4,17 +4,26 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText email,pass,username,cnfpass;
     private Button btn_register;
     private ImageButton btn_back;
+    private TextView error_txt;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
         username = findViewById(R.id.username);
         btn_register = findViewById(R.id.btn_register);
         btn_back = findViewById(R.id.btn_back);
+        error_txt = findViewById(R.id.msg_error);
 
 
         btn_back.setOnClickListener(new View.OnClickListener() {
@@ -50,8 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
                 else
                 {
                     if(pass_str.equals(cnf_pass_str)) {
-                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                        finish();
+                       SignUpUser(email_str,username_str,pass_str,cnf_pass_str);
                     }
                     else
                         Toast.makeText(RegisterActivity.this, "Password not match .....", Toast.LENGTH_SHORT).show();
@@ -60,5 +69,59 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void SignUpUser(String email, String username, String pass , String cnfPass)
+    {
+        try {
+            String api_singup_api = "https://pure-crag-04729.herokuapp.com/api/auth/signup";
+
+            JsonObject jsonBody = new JsonObject();
+            jsonBody.addProperty("username",username);
+            jsonBody.addProperty("email",email);
+            jsonBody.addProperty("password",pass);
+
+            Ion.with(RegisterActivity.this)
+                    .load(api_singup_api).setJsonObjectBody(jsonBody)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+                            if(e != null)
+                            {
+                                Toast.makeText(RegisterActivity.this, "Something went wrong ... !", Toast.LENGTH_SHORT).show();
+                                Log.e("TAG", "onCompleted: Something went wrong ... ! error = "+e.getMessage() );
+                            }
+                            else
+                            {
+//                            scenarios  :
+//                            1- Correct user signup
+//                            2- email exist : expected `email` to be unique
+
+//                                scenario 1
+                                if(!result.has("error"))
+                                {
+                                    String msg = result.get("message").getAsString();
+                                    Toast.makeText(RegisterActivity.this,msg, Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(RegisterActivity.this,MainActivity.class));
+                                    finish();
+                                }
+                                else
+                                {
+                                    error_txt.setText(email+ " exist ... !");
+                                    error_txt.setVisibility(View.VISIBLE);
+                                }
+                            }
+                        }
+                    });
+
+
+
+
+
+        }catch (Exception e)
+        {
+            Log.e("TAG", "SignUpUser: ERROR "+e.getMessage() );
+        }
     }
 }

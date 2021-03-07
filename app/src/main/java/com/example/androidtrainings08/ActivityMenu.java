@@ -38,7 +38,7 @@ public class ActivityMenu extends AppCompatActivity {
 //        1 verifier ama howa el btn ely saretlou el action
         if(item.getItemId() == R.id.logout_btn)
         {
-            sharedPreferences.edit().putBoolean("logged",false).remove("email_user").apply();
+            sharedPreferences.edit().putBoolean("logged",false).remove("email_user").remove("id_user").apply();
             startActivity(new Intent(ActivityMenu.this,MainActivity.class));
             finish();
         }

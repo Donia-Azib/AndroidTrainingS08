@@ -19,6 +19,18 @@
         android:textSize="30sp"
         android:textStyle="bold" />
 
+    <TextView
+        android:id="@+id/msg_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="casual"
+        android:textAllCaps="true"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
     <EditText
         android:id="@+id/email"
         android:layout_width="match_parent"
@@ -27,7 +39,7 @@
         android:ems="10"
         android:fontFamily="casual"
         android:hint="email"
-        android:inputType="textPersonName" />
+        android:inputType="textEmailAddress" />
 
     <EditText
         android:id="@+id/pass"
