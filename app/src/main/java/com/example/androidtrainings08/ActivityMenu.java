@@ -14,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -23,6 +24,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.blikoon.qrcodescanner.QrCodeActivity;
+import com.github.dhaval2404.imagepicker.ImagePicker;
 
 public class ActivityMenu extends AppCompatActivity {
 
@@ -63,6 +65,27 @@ public class ActivityMenu extends AppCompatActivity {
             }
         });
 
+//        2- image
+        btn_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(ActivityMenu.this, Manifest.permission.CAMERA)
+                        == PackageManager.PERMISSION_DENIED)
+                {
+//                    ytlob la permission
+                    ActivityCompat.requestPermissions(ActivityMenu.this, new String[] {Manifest.permission.CAMERA}, 150);
+                }
+                else
+                {
+                    ImagePicker.Companion.with(ActivityMenu.this)
+                            .crop()	    			//Crop image(Optional), Check Customization for more option
+                            .compress(1024)			//Final image size will be less than 1 MB(Optional)
+                            .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
+                            .start();
+                }
+
+            }
+        });
     }
 
     @Override
@@ -91,25 +114,37 @@ public class ActivityMenu extends AppCompatActivity {
             return;
 
         }
-        if(requestCode == REQUEST_CODE_QR_SCAN)
+        else
         {
-            if(data==null)
-                return;
-            //Getting the passed result
-            String result = data.getStringExtra("com.blikoon.qrcodescanner.got_qr_scan_relult");
-            Log.d("LOGTAG","Have scan result in your app activity :"+ result);
-            AlertDialog alertDialog = new AlertDialog.Builder(ActivityMenu.this).create();
-            alertDialog.setTitle("Scan result");
-            alertDialog.setMessage(result);
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-            alertDialog.show();
+            if(requestCode == REQUEST_CODE_QR_SCAN)
+            {
+                if(data==null)
+                    return;
+                //Getting the passed result
+                String result = data.getStringExtra("com.blikoon.qrcodescanner.got_qr_scan_relult");
+                Log.d("LOGTAG","Have scan result in your app activity :"+ result);
+                AlertDialog alertDialog = new AlertDialog.Builder(ActivityMenu.this).create();
+                alertDialog.setTitle("Scan result");
+                alertDialog.setMessage(result);
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
 
+            }
+            else
+            {
+//                partie image
+                Uri fileUri = data.getData();
+                image.setImageURI(fileUri);
+                image.setVisibility(View.VISIBLE);
+
+            }
         }
+
 
 
 
