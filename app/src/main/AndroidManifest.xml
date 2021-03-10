@@ -3,6 +3,8 @@
     package="com.example.androidtrainings08">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+<!--    + code fel java (besoin)    -->
 
     <application
         android:allowBackup="true"
